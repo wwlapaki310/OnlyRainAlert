@@ -2,6 +2,81 @@
 
 A simple and fast React Native app that sends morning notifications only on rainy days.
 
+## 🏗️ System Architecture
+
+```mermaid
+graph TB
+    User[👤 User] --> App[📱 OnlyRainAlert App]
+    
+    subgraph "React Native App"
+        App --> UI[🎨 UI Components]
+        App --> Location[📍 Location Service]
+        App --> Weather[🌦️ Weather Service]
+        App --> Notification[🔔 Notification Service]
+        App --> Storage[💾 Local Storage]
+        App --> I18n[🌍 Internationalization]
+    end
+    
+    subgraph "External Services"
+        WeatherAPI[🌤️ Weather API<br/>OpenWeatherMap]
+        GPS[🛰️ GPS/Location Services]
+    end
+    
+    subgraph "Device Features"
+        LocalNotification[📲 Local Notifications]
+        DeviceLocation[📍 Device GPS]
+    end
+    
+    Location --> DeviceLocation
+    Location --> GPS
+    Weather --> WeatherAPI
+    Notification --> LocalNotification
+    
+    subgraph "Data Flow"
+        Morning[⏰ Morning Timer] --> CheckWeather{🌧️ Rain Check}
+        CheckWeather -->|Rain Expected| SendNotification[🔔 Send Alert]
+        CheckWeather -->|No Rain| NoAction[✅ No Action]
+    end
+    
+    Storage --> UserSettings[⚙️ User Settings<br/>• Notification Time<br/>• Location<br/>• Language]
+    
+    style App fill:#e1f5fe
+    style WeatherAPI fill:#fff3e0
+    style LocalNotification fill:#f3e5f5
+    style Morning fill:#e8f5e8
+```
+
+## 🔄 Data Flow
+
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant A as OnlyRainAlert
+    participant L as Location Service
+    participant W as Weather API
+    participant N as Notification System
+    
+    U->>A: Opens App
+    A->>L: Request Location Permission
+    L->>A: Grant Permission
+    A->>L: Get Current Location
+    L->>A: Return Coordinates
+    
+    Note over A: Daily at Set Time (e.g., 06:00)
+    A->>W: Request Weather Forecast
+    W->>A: Return Weather Data
+    
+    alt Rain Expected
+        A->>N: Schedule Rain Notification
+        N->>U: 🌧️ "Rain expected today!"
+    else No Rain
+        Note over A: No notification sent
+    end
+    
+    U->>A: Change Settings
+    A->>A: Save to Local Storage
+```
+
 ## 🌟 Features
 
 - **Simple & Fast**: Minimal design with optimal performance
@@ -18,9 +93,11 @@ _Coming soon..._
 ## 🛠️ Tech Stack
 
 - **React Native**: Cross-platform mobile development
-- **Weather API**: Real-time weather data integration
+- **Weather API**: Real-time weather data integration (OpenWeatherMap)
 - **Push Notifications**: Local notification system
-- **Internationalization**: Multi-language support
+- **Internationalization**: Multi-language support (i18next)
+- **Location Services**: GPS-based location detection
+- **Local Storage**: AsyncStorage for user preferences
 
 ## 🚀 Getting Started
 
@@ -34,10 +111,10 @@ _Coming soon..._
 
 ```bash
 # Clone the repository
-git clone https://github.com/wwlapaki310/RainAlert.git
+git clone https://github.com/wwlapaki310/OnlyRainAlert.git
 
 # Navigate to project directory
-cd RainAlert
+cd OnlyRainAlert
 
 # Install dependencies
 npm install
@@ -53,7 +130,7 @@ npx react-native run-ios
 
 ## 📋 Development Roadmap
 
-See [Issues](https://github.com/wwlapaki310/RainAlert/issues) for detailed development tasks.
+See [Issues](https://github.com/wwlapaki310/OnlyRainAlert/issues) for detailed development tasks.
 
 ## 🌍 Supported Languages
 
