@@ -1,4 +1,4 @@
-# RainAlert ☔️
+# OnlyRainAlert ☔️
 
 A simple and fast React Native app that sends morning notifications only on rainy days.
 
